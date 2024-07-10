@@ -13,9 +13,9 @@
         <input v-model="city" type="text" placeholder="Enter city" class="px-4 py-2 border rounded mb-4">
         <button @click="getWeather" class="px-4 py-2 bg-blue-500 text-white rounded">Get Weather</button>
         <div v-if="weather" class="mt-4 text-xl">
-            <p>City: {{ weather.title }}</p>
-            <p>Weather: {{ weather.consolidated_weather[0].weather_state_name }}</p>
-            <p>Temperature: {{ weather.consolidated_weather[0].the_temp.toFixed(1) }}°C</p>
+            <p>City: {{ weather.name }}</p>
+            <p>Weather: {{ weather.weather[0].description }}</p>
+            <p>Temperature: {{ weather.main.temp.toFixed(1) }}°C</p>
         </div>
         <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
     </div>
