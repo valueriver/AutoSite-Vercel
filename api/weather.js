@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
 
-const API_KEY = 'YOUR_API_KEY'; // 替换为你的OpenWeatherMap API密钥
-
 export default async (req, res) => {
     const { city } = req.query;
 
@@ -10,12 +8,19 @@ export default async (req, res) => {
     }
 
     try {
-        const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
-        const weatherData = await weatherResponse.json();
+        // 获取城市的woeid
+        const locationResponse = await fetch(`https://www.metaweather.com/api/location/search/?query=${city}`);
+        const locationData = await locationResponse.json();
 
-        if (weatherData.cod !== 200) {
-            return res.status(weatherData.cod).json({ error: weatherData.message });
+        if (locationData.length === 0) {
+            return res.status(404).json({ error: 'City not found' });
         }
+
+        const woeid = locationData[0].woeid;
+
+        // 获取天气信息
+        const weatherResponse = await fetch(`https://www.metaweather.com/api/location/${woeid}/`);
+        const weatherData = await weatherResponse.json();
 
         res.status(200).json(weatherData);
     } catch (error) {
