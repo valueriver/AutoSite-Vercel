@@ -1,45 +1,35 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>笑话展示</title>
+    <title>Joke Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
-    <div id="app" class="bg-white p-8 rounded-lg shadow-md text-center">
-        <h1 class="text-2xl font-bold mb-4">笑话展示</h1>
-        <p class="mb-4 text-xl">{{ joke }}</p>
-        <button @click="fetchJoke" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            获取笑话
-        </button>
-    </div>
-
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app" class="flex items-center justify-center h-screen">
+        <div class="text-center">
+            <button @click="fetchJoke" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get a Joke</button>
+            <p class="mt-4 text-lg" v-if="joke">{{ joke }}</p>
+        </div>
+    </div>
     <script>
-        const { createApp, ref } = Vue
-
+        const { createApp } = Vue;
         createApp({
-            setup() {
-                const joke = ref('')
-
-                const fetchJoke = async () => {
-                    try {
-                        const response = await fetch('/api/joke')
-                        const data = await response.json()
-                        joke.value = data.joke
-                    } catch (error) {
-                        console.error('Error:', error)
-                        joke.value = '获取笑话时出错'
-                    }
-                }
-
+            data() {
                 return {
-                    joke,
-                    fetchJoke
+                    joke: ''
+                };
+            },
+            methods: {
+                async fetchJoke() {
+                    const response = await fetch('/api/joke');
+                    const data = await response.json();
+                    this.joke = data.joke;
                 }
             }
-        }).mount('#app')
+        }).mount('#app');
     </script>
 </body>
 </html>
