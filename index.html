@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joke Generator</title>
+    <title>Weather Query</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
     <div id="app" class="text-center">
-        <h1 class="text-3xl font-bold mb-4">Joke Generator</h1>
-        <button @click="getJoke" class="px-4 py-2 bg-blue-500 text-white rounded">Get a Joke</button>
-        <p class="mt-4 text-xl" v-if="joke">{{ joke }}</p>
+        <h1 class="text-3xl font-bold mb-4">Weather Query</h1>
+        <input v-model="city" type="text" placeholder="Enter city" class="px-4 py-2 border rounded mb-4">
+        <button @click="getWeather" class="px-4 py-2 bg-blue-500 text-white rounded">Get Weather</button>
+        <div v-if="weather" class="mt-4 text-xl">
+            <p>City: {{ weather.title }}</p>
+            <p>Weather: {{ weather.consolidated_weather[0].weather_state_name }}</p>
+            <p>Temperature: {{ weather.consolidated_weather[0].the_temp.toFixed(1) }}°C</p>
+        </div>
+        <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
     </div>
 
     <script>
@@ -20,14 +26,25 @@
         createApp({
             data() {
                 return {
-                    joke: ''
+                    city: '',
+                    weather: null,
+                    error: ''
                 };
             },
             methods: {
-                async getJoke() {
-                    const response = await fetch('/api/joke');
-                    const data = await response.json();
-                    this.joke = data.joke;
+                async getWeather() {
+                    this.weather = null;
+                    this.error = '';
+                    try {
+                        const response = await fetch(`/api/weather?city=${this.city}`);
+                        if (!response.ok) {
+                            throw new Error('City not found');
+                        }
+                        const data = await response.json();
+                        this.weather = data;
+                    } catch (err) {
+                        this.error = err.message;
+                    }
                 }
             }
         }).mount('#app');
