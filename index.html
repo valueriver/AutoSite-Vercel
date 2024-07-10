@@ -45,9 +45,12 @@
                             throw new Error('City not found');
                         }
                         const data = await response.json();
+                        console.log('Response Data:', data); // Debugging line
                         this.weather = data;
+                        console.log('Weather Data:', this.weather); // Debugging line
                     } catch (err) {
                         this.error = err.message;
+                        console.error('Error:', err); // Debugging line
                     }
                 }
             }
