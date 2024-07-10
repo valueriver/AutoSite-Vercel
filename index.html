@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Query</title>
+    <title>天气查询</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
     <div id="app" class="text-center">
-        <h1 class="text-3xl font-bold mb-4">Weather Query</h1>
-        <input v-model="city" type="text" placeholder="Enter city" class="px-4 py-2 border rounded mb-4">
-        <button @click="getWeather" class="px-4 py-2 bg-blue-500 text-white rounded">Get Weather</button>
+        <h1 class="text-3xl font-bold mb-4">天气查询</h1>
+        <input v-model="city" type="text" placeholder="输入城市" class="px-4 py-2 border rounded mb-4">
+        <button @click="getWeather" class="px-4 py-2 bg-blue-500 text-white rounded">获取天气</button>
         <div v-if="weather" class="mt-4 text-xl">
-            <p>City: {{ weather.nearest_area[0].areaName[0].value }}</p>
-            <p>Country: {{ weather.nearest_area[0].country[0].value }}</p>
-            <p>Region: {{ weather.nearest_area[0].region[0].value }}</p>
-            <p>Temperature: {{ weather.current_condition[0].temp_C }}
-            <p>Weather: {{ weather.current_condition[0].weatherDesc[0].value }}</p>
-            <p>Humidity: {{ weather.current_condition[0].humidity }}%</p>
-            <p>Wind Speed: {{ weather.current_condition[0].windspeedKmph }} km/h</p>
+            <p>城市: {{ weather.nearest_area[0].areaName[0].value }}</p>
+            <p>国家: {{ weather.nearest_area[0].country[0].value }}</p>
+            <p>地区: {{ weather.nearest_area[0].region[0].value }}</p>
+            <p>温度: {{ weather.current_condition[0].temp_C }}°C</p>
+            <p>天气: {{ weather.current_condition[0].weatherDesc[0].value }}</p>
+            <p>湿度: {{ weather.current_condition[0].humidity }}%</p>
+            <p>风速: {{ weather.current_condition[0].windspeedKmph }} km/h</p>
         </div>
         <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
     </div>
@@ -42,15 +42,15 @@
                     try {
                         const response = await fetch(`/api/weather?city=${this.city}`);
                         if (!response.ok) {
-                            throw new Error('City not found');
+                            throw new Error('城市未找到');
                         }
                         const data = await response.json();
-                        console.log('Response Data:', data); // Debugging line
+                        console.log('响应数据:', data); // 调试行
                         this.weather = data;
-                        console.log('Weather Data:', this.weather); // Debugging line
+                        console.log('天气数据:', this.weather); // 调试行
                     } catch (err) {
                         this.error = err.message;
-                        console.error('Error:', err); // Debugging line
+                        console.error('错误:', err); // 调试行
                     }
                 }
             }
