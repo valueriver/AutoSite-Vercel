@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joke Website</title>
+    <title>Joke Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-<body>
-    <div id="app" class="flex items-center justify-center h-screen">
-        <div class="text-center">
-            <button @click="fetchJoke" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get a Joke</button>
-            <p class="mt-4 text-lg" v-if="joke">{{ joke }}</p>
-        </div>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div id="app" class="text-center">
+        <h1 class="text-3xl font-bold mb-4">Joke Generator</h1>
+        <button @click="getJoke" class="px-4 py-2 bg-blue-500 text-white rounded">Get a Joke</button>
+        <p class="mt-4 text-xl" v-if="joke">{{ joke }}</p>
     </div>
+
     <script>
         const { createApp } = Vue;
+
         createApp({
             data() {
                 return {
@@ -23,7 +24,7 @@
                 };
             },
             methods: {
-                async fetchJoke() {
+                async getJoke() {
                     const response = await fetch('/api/joke');
                     const data = await response.json();
                     this.joke = data.joke;
