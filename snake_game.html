@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-bit Snake Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        svg {
+            background-color: #111;
+        }
+    </style>
+</head>
+<body>
+    <svg id="game" width="400" height="400"></svg>
+    <script>
+        const svg = document.getElementById('game');
+        const size = 20;
+        const width = svg.clientWidth / size;
+        const height = svg.clientHeight / size;
+        let snake = [{ x: 10, y: 10 }];
+        let direction = { x: 0, y: 0 };
+        let food = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
+
+        function drawPixel(x, y, color) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', x * size);
+            rect.setAttribute('y', y * size);
+            rect.setAttribute('width', size);
+            rect.setAttribute('height', size);
+            rect.setAttribute('fill', color);
+            svg.appendChild(rect);
+        }
+
+        function draw() {
+            svg.innerHTML = '';
+            snake.forEach(segment => drawPixel(segment.x, segment.y, '#0f0'));
+            drawPixel(food.x, food.y, '#f00');
+        }
+
+        function update() {
+            const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) {
+                food = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
+            } else {
+                snake.pop();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            if (snake[0].x < 0 || snake[0].x >= width || snake[0].y < 0 || snake[0].y >= height || snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)) {
+                alert('Game Over');
+                snake = [{ x: 10, y: 10 }];
+                direction = { x: 0, y: 0 };
+            }
+        }
+
+        window.addEventListener('keydown', e => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (direction.y === 0) direction = { x: 0, y: -1 };
+                    break;
+                case 'ArrowDown':
+                    if (direction.y === 0) direction = { x: 0, y: 1 };
+                    break;
+                case 'ArrowLeft':
+                    if (direction.x === 0) direction = { x: -1, y: 0 };
+                    break;
+                case 'ArrowRight':
+                    if (direction.x === 0) direction = { x: 1, y: 0 };
+                    break;
+            }
+        });
+
+        setInterval(gameLoop, 200);
+    </script>
+</body>
+</html>
