@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天气查询</title>
+    <title>首页</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         body {
             background: linear-gradient(to right, #6a11cb, #2575fc);
@@ -18,66 +17,26 @@
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        input, button {
-            outline: none;
-        }
-        input {
+        a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
         }
-        input::placeholder {
-            color: #ddd;
+        a:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-    <div id="app" class="text-center card">
-        <h1 class="text-4xl font-bold mb-6">天气查询</h1>
-        <input v-model="city" type="text" placeholder="输入城市" class="px-4 py-2 border rounded mb-4 w-full">
-        <button @click="getWeather" class="px-4 py-2 bg-blue-500 text-white rounded w-full">获取天气</button>
-        <div v-if="weather" class="mt-6 text-xl">
-            <p class="mb-2">城市: {{ weather.nearest_area[0].areaName[0].value }}</p>
-            <p class="mb-2">国家: {{ weather.nearest_area[0].country[0].value }}</p>
-            <p class="mb-2">地区: {{ weather.nearest_area[0].region[0].value }}</p>
-            <p class="mb-2">温度: {{ weather.current_condition[0].temp_C }}°C</p>
-            <p class="mb-2">天气: {{ weather.current_condition[0].weatherDesc[0].value }}</p>
-            <p class="mb-2">湿度: {{ weather.current_condition[0].humidity }}%</p>
-            <p class="mb-2">风速: {{ weather.current_condition[0].windspeedKmph }} km/h</p>
-        </div>
-        <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
+    <div class="text-center card">
+        <h1 class="text-4xl font-bold mb-6">首页</h1>
+        <a href="weather.html">天气查询</a>
+        <a href="joke.html">笑话页面</a>
     </div>
-
-    <script>
-        const { createApp } = Vue;
-
-        createApp({
-            data() {
-                return {
-                    city: '',
-                    weather: null,
-                    error: ''
-                };
-            },
-            methods: {
-                async getWeather() {
-                    this.weather = null;
-                    this.error = '';
-                    try {
-                        const response = await fetch(`/api/weather?city=${this.city}`);
-                        if (!response.ok) {
-                            throw new Error('城市未找到');
-                        }
-                        const data = await response.json();
-                        console.log('响应数据:', data); // 调试行
-                        this.weather = data;
-                        console.log('天气数据:', this.weather); // 调试行
-                    } catch (err) {
-                        this.error = err.message;
-                        console.error('错误:', err); // 调试行
-                    }
-                }
-            }
-        }).mount('#app');
-    </script>
 </body>
 </html>

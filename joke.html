@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>笑话页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div id="app" class="text-center card">
+        <h1 class="text-4xl font-bold mb-6">笑话页面</h1>
+        <button @click="getJoke" class="px-4 py-2 bg-blue-500 text-white rounded w-full">获取笑话</button>
+        <div v-if="joke" class="mt-6 text-xl">
+            <p class="mb-2">{{ joke }}</p>
+        </div>
+        <p v-if="error" class="mt-4 text-red-500">{{ error }}</p>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    joke: '',
+                    error: ''
+                };
+            },
+            methods: {
+                async getJoke() {
+                    this.joke = '';
+                    this.error = '';
+                    try {
+                        const response = await fetch(`/api/joke`);
+                        if (!response.ok) {
+                            throw new Error('无法获取笑话');
+                        }
+                        const data = await response.json();
+                        console.log('响应数据:', data); // 调试行
+                        this.joke = data.joke;
+                        console.log('笑话数据:', this.joke); // 调试行
+                    } catch (err) {
+                        this.error = err.message;
+                        console.error('错误:', err); // 调试行
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
